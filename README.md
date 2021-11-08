@@ -1,4 +1,4 @@
-# les etapes :
+# Les étapes :
 1. organiser les données :
  1.1. dézipper 
  1.2. organiser les dossiers
