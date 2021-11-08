@@ -9,4 +9,4 @@
   LSTM bidirectionnel + CTC 
 4. decodage de résultat:
   Beam search algorithm
-5.  
+5.  test
