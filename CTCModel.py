@@ -588,7 +588,7 @@ class CTCModel:
             ValueError: In case the generator yields
                 data in an invalid format.
         """
-        self.model_pred._make_predict_function()
+        self.model_pred.make_predict_function()
 
         steps_done = 0
         wait_time = 0.01
