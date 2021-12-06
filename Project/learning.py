@@ -52,7 +52,7 @@ model.compile(optimizer=Adam(lr=0.0001))
 # print(type(model))
 
 history = model.fit(training_generator,epochs=5,validation_data=validation_generator)
-
+# model.save('/content/drive/MyDrive/Speech_recognition_dataset/model_4')
 
 
 print(history.history.keys())
