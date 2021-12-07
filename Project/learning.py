@@ -30,18 +30,34 @@ Data Generators
 
 """
 
-
 data_params = {'window_len' : 128,
                'hop_len' : 127,
                'nfft' : 256,
                'batch_size' : 32,
                'shuffle' : True
                }
+
 print("Data Generation")
 training_generator = DataGenerator(train_path, **data_params)
 validation_generator = DataGenerator(valid_path, **data_params)
 test_generator = DataGenerator(test_path, **data_params)
 
+# dataset dialect per region: 8 régions 
+training_generator.dialec_regions()
+
+# dataset dialect gender per region: 8 régions 
+training_generator.gender_regions()
+
+# wav form
+training_generator.plot_wav(train_path[0])
+
+# spectogram:
+training_generator.plot_spectogram(train_path[0])
+
+# play audio:
+print("text data: \n",y_data_init[0])
+x, sr = librosa.load(train_path[0], sr=16000)
+ipd.Audio(x, rate=sr) 
 
 """
 Model training

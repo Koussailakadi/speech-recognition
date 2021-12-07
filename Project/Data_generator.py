@@ -12,7 +12,6 @@ from scipy.io import wavfile
 
 
 class DataGenerator(tf.keras.utils.Sequence):
-
     'Generates data for Keras'
     def __init__(self, list_IDs,shuffle=False, batch_size=32, window_len=128,nfft=256,hop_len=127):
         'Initialization'
@@ -77,7 +76,6 @@ class DataGenerator(tf.keras.utils.Sequence):
 
     def get_data (self,data_IDs):
       """renvoie le son ainsi que son text associé normalisé """
-
       son = []
       text = []
 
@@ -101,6 +99,58 @@ class DataGenerator(tf.keras.utils.Sequence):
           text.append(result)
       return son, text
 
+    # desplay wav form:
+    def plot_wav(self, data_IDs):
+        x, sr = librosa.load(data_IDs, sr=16000)
+        librosa.display.waveplot(x, sr=sr)
+
+    # desplay spectogram
+    def plot_spectogram(self,data_IDs):
+        x, sr = librosa.load(data_IDs, sr=16000)
+        X = librosa.stft(x)
+        Xdb = librosa.amplitude_to_db(abs(X))
+        librosa.display.specshow(Xdb, sr=sr, x_axis='time', y_axis='hz')
+       
+    def dialec_regions(self):
+        # Pie chart, where the slices will be ordered and plotted counter-clockwise:
+        labels = "New England", "Northern", "North Midland", "South Midland", "Southern", "New York City", "Western", "Army Brat"
+        sizes = [8, 16, 16, 16, 16, 7, 16,5]
+        explode = (0, 0.2, 0, 0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+
+        plt.figure(figsize=(7,7))
+        plt.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',shadow=True, startangle=90)
+        plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        plt.title("Dialecte (%) par région")
+
+        plt.show()
+
+    def gender_regions(self):
+      gender_per_region={ 1:[63,27],
+                            2:[70,30],
+                            3:[67,33],
+                            4:[69,31],
+                            5:[63,37],
+                            6:[65,35],
+                            7:[74,26],
+                            8:[67,33]
+                            }
+
+      count=1
+      labels = "Male", "femele"
+      sizes = [8, 16]
+      explode = (0, 0.2)  # only "explode" the 2nd slice (i.e. 'Hogs')
+      fig, axs = plt.subplots(2, 4, figsize=(16,7))
+      colors=['#ff9999','#66b3ff']
+      for i in range(2):
+        for j in range(4):
+            axs[i,j].pie(gender_per_region[count], explode=explode, labels=labels, autopct='%1.1f%%',
+                    shadow=True, startangle=90, colors=colors)
+            axs[i,j].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+            axs[i,j].set_title("Dialect % region: {}".format(count))
+
+            count+=1  
+        plt.show 
 
     def get_padded_mel_spectro(self,audio, maxlen):
         mel_spectro =np.log(np.absolute(librosa.stft(audio.astype(float),  n_fft= self.nfft,hop_length=self.hop_len, win_length=self.window_len)))
@@ -129,8 +179,8 @@ class DataGenerator(tf.keras.utils.Sequence):
         input_length = np.array(x_data_len)
 
         return data_input,input_length
-
-#changer les noms
+      
+    #changer les noms
     def encode_text(self, y_data_init):
 
         y_max_length = len(max(y_data_init, key=len))
@@ -159,6 +209,48 @@ class DataGenerator(tf.keras.utils.Sequence):
         label_length = np.array(y_data_len)
 
         return y_data, label_length
+    
+    def decode(self,sequence):
+        unpaded = [j for j in sequence if j != -1]
+        pred = []
+        char_dict =  { ' ': 0,
+                                'a': 1,
+                                'b' : 2,
+                                'c' : 3,
+                                'd' : 4,
+                                'e' : 5,
+                                'f' : 6,
+                                'g' : 7,
+                                'h' : 8,
+                                'i' : 9,
+                                'j' : 10,
+                                'k' : 11,
+                                'l' : 12,
+                                'm' : 13,
+                                'n' : 14,
+                                'o' : 15,
+                                'p' : 16,
+                                'q' : 17,
+                                'r' : 18,
+                                's' : 19,
+                                't' : 20,
+                                'u' : 21,
+                                'v' : 22,
+                                'w' : 23,
+                                'x' : 24,
+                                'y' : 25,
+                                'z' : 26
+                                }
+        char_dict_inv= dict((v,k) for k,v in char_dict.items())
+        for c in unpaded:
+            if c == 0:
+                pred.append(" ")
+            if c==255:
+              pred.append("")
+            else:
+                pred.append(char_dict_inv[c])
+        pred = ''.join(pred)
+        return pred
 
 
     def __data_generation(self, list_IDs_temp):
