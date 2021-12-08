@@ -64,7 +64,7 @@ model = model()
 model.compile(optimizer=Adam(lr=0.0001))
 
 # implement model
-history = model.fit(training_generator,epochs=5,validation_data=validation_generator)
+history = model.fit(training_generator,epochs=19,validation_data=validation_generator)
 
 
 print(history.history.keys())
