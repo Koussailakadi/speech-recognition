@@ -22,8 +22,11 @@ Afin d'éxecuter le projet il faut :
   
   2- Avoir installé les packages nécessaires "Tensorflow, jiwer, pandas, numpy...etc".
   
-  3- Ouvrir le notebook "Main" pour visualiser les prédictions du model.
+  3- Avoir téléchargé le model indépendemment pour éviter la corruption du fichier lors de la compression .
   
-  4- Executer les cellules du notebook.
+  4- Ouvrir le notebook "Main" pour visualiser les prédictions du model.
+  
+  5- Executer les cellules du notebook.
+ 
  
 
